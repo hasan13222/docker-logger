@@ -8,9 +8,9 @@ let server: Server;
 
 async function main() {
   try {
-    server = app.listen(5000, () => {
-      console.log(`app is listening on port ${5000}`);
-      logger.info(`app is listening on port ${5000}`);
+    server = app.listen(process.env.PORT, () => {
+      console.log(`app is listening on port ${process.env.PORT}`);
+      logger.info(`app is listening on port ${process.env.PORT}`);
     });
   } catch (err) {
     console.log(err);
@@ -37,3 +37,6 @@ process.on("uncaughtException", () => {
   errorlogger.error("uncaughtException is detected");
   process.exit(1);
 });
+
+
+// docker run -p 5000:5000 --name ts-container -v ts-docker-logs://app/logs -w //app -v "$(cwd)"://app -v //app/node_modules --rm ts-docker:v2
