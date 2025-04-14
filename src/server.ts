@@ -1,13 +1,18 @@
 import { Server } from "http";
+import mongoose from "mongoose";
 import app from "./app";
+import config from "./app/config";
 import { errorlogger, logger } from "./app/src/shared/logger";
-import dotenv from "dotenv"
 
-dotenv.config();
 let server: Server;
 
 async function main() {
   try {
+    await mongoose.connect(config.database_url as string);
+
+    logger.info("Connected to database");
+
+
     server = app.listen(process.env.PORT, () => {
       console.log(`app is listening on port ${process.env.PORT}`);
       logger.info(`app is listening on port ${process.env.PORT}`);
@@ -17,7 +22,6 @@ async function main() {
     errorlogger.error(err);
   }
 }
-
 
 main();
 
@@ -37,6 +41,3 @@ process.on("uncaughtException", () => {
   errorlogger.error("uncaughtException is detected");
   process.exit(1);
 });
-
-
-// docker run -p 5000:5000 --name ts-container -v ts-docker-logs://app/logs -w //app -v "$(cwd)"://app -v //app/node_modules --rm ts-docker:v2
